@@ -1,48 +1,30 @@
 package com.tmb.tests;
 
-import com.tmb.config.FrameworkConfig;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.aeonbits.owner.ConfigFactory;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import com.tmb.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.TimeUnit;
+public class HomePageTest extends BaseTest {
 
-public class HomePageTest {
-
-    FrameworkConfig config;
-    WebDriver driver;
-
-    @BeforeSuite
-    public void beforeSuite(){
-        config = ConfigFactory.create(FrameworkConfig.class);
+    @DataProvider
+    public static Object[][] getData() {
+        return new Object[][]{
+                {"Admin","admin123","OrangeHRM"}
+        };
     }
 
-    @BeforeMethod
-    public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(config.timeout(), TimeUnit.SECONDS);//presence of element in the dom
-        driver.get(config.url());
-    }
+    @Test(description = "To check whether the user the title of orangehrm website homepage is displayed correctly"
+    ,dataProvider = "getData")
+    public void titleValidationTest(String username, String password, String expectedTitle) {
+        LoginPage loginPage = new LoginPage();
+        String actualTitle = loginPage
+                .loginToApplication(username,password)
+                .getHomePageTitle();
 
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
-    }
+        Assert.assertEquals(actualTitle, expectedTitle);
 
-    @Test(description = "To check whether the user the title of orangehrm website homepage is displayed correctly")
-    public void titleValidationTest() throws InterruptedException {
-        driver.findElement(By.id("txtUsername")).sendKeys("Admin");
-        driver.findElement(By.id("txtPassword")).sendKeys("admin123");
-        driver.findElement(By.id("btnLogin")).click();
-        Assert.assertEquals(driver.getTitle(), "OrangeHRM");
+
+        //to keep all your locators and methods in one class
     }
 }
