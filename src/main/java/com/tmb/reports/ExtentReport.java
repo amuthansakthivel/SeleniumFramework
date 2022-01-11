@@ -17,6 +17,7 @@ public final class ExtentReport {
         extent = new ExtentReports();
         ExtentSparkReporter spark = new ExtentSparkReporter(FrameworkConstants.getReportPath());
         extent.attachReporter(spark);
+
     }
 
     public static void flushReports(){
@@ -26,6 +27,10 @@ public final class ExtentReport {
     public static void createTest(String testCaseName){
         extentTest = extent.createTest(testCaseName);
         ExtentManager.setExtentTest(extentTest);
+    }
+
+    public static void assignAuthor(String author){
+        ExtentManager.getExtentTest().assignAuthor(author);
     }
 
 }

@@ -14,5 +14,6 @@ public final class ExtentManager {
 
     static void setExtentTest(ExtentTest test){
         threadLocal.set(test);
+
     }
 }
