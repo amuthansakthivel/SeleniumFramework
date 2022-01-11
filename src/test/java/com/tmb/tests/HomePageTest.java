@@ -2,30 +2,26 @@ package com.tmb.tests;
 
 import com.tmb.annotations.FrameworkAnnotation;
 import com.tmb.pages.LoginPage;
-import com.tmb.reports.ExtentManager;
+import com.tmb.testdata.TestData;
+import com.tmb.utils.DataProviderUtils;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HomePageTest extends BaseTest {
 
-    @DataProvider
-    public static Object[][] getData() {
-        return new Object[][]{
-                {"Admin","admin123","OrangeHRM123"}
-        };
-    }
+
 
     @FrameworkAnnotation
-    @Test(description = "To check whether the user the title of orangehrm website homepage is displayed correctly",dataProvider = "getData")
-    public void titleValidationTest(String username, String password, String expectedTitle) {
+    @Test(description = "To check whether the user the title of orangehrm website homepage is displayed correctly",
+            dataProvider = "getData", dataProviderClass = DataProviderUtils.class)
+    public void titleValidationTest(TestData testdata) {
 
         LoginPage loginPage = new LoginPage();
         String actualTitle = loginPage
-                .loginToApplication(username,password)
+                .loginToApplication(testdata.username, testdata.password)
                 .getHomePageTitle();
 
-        Assert.assertEquals(actualTitle, expectedTitle);
+        Assert.assertEquals(actualTitle, testdata.expectedTitle);
 
 
         //to keep all your locators and methods in one class
